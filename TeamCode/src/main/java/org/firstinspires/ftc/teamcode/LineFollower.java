@@ -91,7 +91,7 @@ public class LineFollower extends I2cDeviceSynchDevice<I2cDeviceSynch> {
      * @return the offset of the line from the center in inches
      * */
     public double getPositionInches() {
-        return getPosition()/64.0;
+        return getPosition()/72.73;
     }
 
     @Override
