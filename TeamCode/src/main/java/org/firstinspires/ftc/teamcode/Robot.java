@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import androidx.annotation.GuardedBy;
 
-import com.acmerobotics.dashboard.config.Config;
+
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.Subsystem;
@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-@Config
+
 public abstract class Robot extends LinearOpMode {
     private final Object imuLock = new Object();
     @GuardedBy("imuLock")
@@ -43,6 +43,8 @@ public abstract class Robot extends LinearOpMode {
     public double lastx=0;
     public double lasty=0;
     public double lastrot=0;
+    SparkFunOTOS otos;
+    SparkFunOTOS.Pose2D pose2D = new SparkFunOTOS.Pose2D(0,0,0);
     public void initialize() {
         chub = hardwareMap.getAll(LynxModule.class).get(0);
         chub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
@@ -62,9 +64,12 @@ public abstract class Robot extends LinearOpMode {
         huskyLens.initialize();
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
         odometry = new Odometry(fl,fr,bl,br,imu);
-
-        reset();
-
+        otos = hardwareMap.get(SparkFunOTOS.class,"otos");
+        otos.setLinearUnit(SparkFunOTOS.LinearUnit.INCHES);
+        otos.setAngularUnit(SparkFunOTOS.AngularUnit.DEGREES);
+        otos.setOffset(new SparkFunOTOS.Pose2D(-6,-0.5,180));
+        otos.calibrateImu();
+        resetSystems();
 
     }
     public void resetSystems() {
@@ -76,6 +81,7 @@ public abstract class Robot extends LinearOpMode {
         fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        otos.resetTracking();
     }
     public void resetIMU() {
         imu.resetYaw();
@@ -100,7 +106,7 @@ public abstract class Robot extends LinearOpMode {
         telemetry.addData("drive x", y);
         telemetry.addData("drive y", -x);
         telemetry.addData("drive rx", rx);
-        double botHeading = odometry.getPose().getHeading();
+        double botHeading = Math.toRadians(pose2D.h);
 
 
 
@@ -179,28 +185,5 @@ public abstract class Robot extends LinearOpMode {
     public static boolean compare(double a, double b, double tolerance) {
         return Math.abs(a-b)<tolerance;
     }
-    public void reset() {
-        CommandScheduler.getInstance().reset();
-    }
 
-    /**
-     * Runs the {@link CommandScheduler} instance
-     */
-    public void run() {
-        CommandScheduler.getInstance().run();
-    }
-
-    /**
-     * Schedules {@link com.arcrobotics.ftclib.command.Command} objects to the scheduler
-     */
-    public void schedule(Command... commands) {
-        CommandScheduler.getInstance().schedule(commands);
-    }
-
-    /**
-     * Registers {@link com.arcrobotics.ftclib.command.Subsystem} objects to the scheduler
-     */
-    public void register(Subsystem... subsystems) {
-        CommandScheduler.getInstance().registerSubsystem(subsystems);
-    }
 }

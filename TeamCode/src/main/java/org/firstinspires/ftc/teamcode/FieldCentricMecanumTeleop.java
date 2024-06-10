@@ -31,17 +31,20 @@ public class FieldCentricMecanumTeleop extends Robot {
 
         while (opModeIsActive()) {
             chub.clearBulkCache();
-            double y = -gamepad1.left_stick_y*0.5; // Remember, Y stick value is reversed
-            double x = gamepad1.left_stick_x*0.5;
-            double rx = gamepad1.right_stick_x*0.5;
+
+            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
+            double x = gamepad1.left_stick_x;
+            double rx = gamepad1.right_stick_x;
             drive(x,y,rx);
-            odometry.update();
+            pose2D = otos.getPosition();
 
             telemetry.addData("fl", fl.getCurrentPosition());
             telemetry.addData("bl", bl.getCurrentPosition());
             telemetry.addData("fr", fr.getCurrentPosition());
             telemetry.addData("br", br.getCurrentPosition());
-            telemetry.addData("pose", odometry.getPose());
+            telemetry.addData("pose x", pose2D.x);
+            telemetry.addData("pose y", pose2D.y);
+            telemetry.addData("pose h", pose2D.h);
             if (gamepad1.options) {
                 resetIMU();
             }
