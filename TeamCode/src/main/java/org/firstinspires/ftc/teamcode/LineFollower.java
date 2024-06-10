@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchDevice;
@@ -11,6 +13,7 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 
 public class LineFollower extends I2cDeviceSynchDevice<I2cDeviceSynch> {
     byte lastBarRawValue = 0;
+    boolean invertBits = true;
 
     public LineFollower(I2cDeviceSynch i2cDeviceSynch, boolean deviceClientIsOwned) {
         super(i2cDeviceSynch, deviceClientIsOwned);
@@ -22,6 +25,10 @@ public class LineFollower extends I2cDeviceSynchDevice<I2cDeviceSynch> {
     public byte scan() {
         deviceClient.write8(Registry.DATAB.bVal,0x00);
         lastBarRawValue = deviceClient.read8(Registry.DATAA.bVal);
+        if(invertBits == true) //Invert the bits if needed
+        {
+            lastBarRawValue ^= 0xFF;
+        }
         return lastBarRawValue;
     }
     public void reset() {
@@ -36,11 +43,11 @@ public class LineFollower extends I2cDeviceSynchDevice<I2cDeviceSynch> {
     /**
      * @return the offset of the line from the center
      * */
-    public int getPosition() {
+    public double getPosition() {
 
         int accumulator = 0;
         byte bitsCounted = 0;
-        int lastBarPositionValue = 0;
+        double lastBarPositionValue = 0;
         int i = 0;
         for ( i = 0; i < 8; i++ )
         {
@@ -68,7 +75,7 @@ public class LineFollower extends I2cDeviceSynchDevice<I2cDeviceSynch> {
 
         if ( bitsCounted > 0 )
         {
-            lastBarPositionValue = accumulator / bitsCounted;
+            lastBarPositionValue = accumulator / (bitsCounted);
         }
         else
         {
@@ -76,18 +83,24 @@ public class LineFollower extends I2cDeviceSynchDevice<I2cDeviceSynch> {
         }
         return lastBarPositionValue;
     }
+    public void setInvertBits(boolean invert) {
+        invertBits=invert;
+    }
+
     /**
      * @return the offset of the line from the center in inches
      * */
     public double getPositionInches() {
-        return getPosition()/2.0;
+        return getPosition()/64.0;
     }
 
     @Override
     protected boolean doInitialize() {
+        byte[] byes =  deviceClient.read(Registry.INTERRUPT_MASK_A.bVal);
+        Log.println(Log.ASSERT,"line follower","initializing: " + byes);
         reset();
         init();
-        return true;
+        return byes[0] == 0xFF00;
     }
 
     @Override
@@ -104,7 +117,8 @@ public class LineFollower extends I2cDeviceSynchDevice<I2cDeviceSynch> {
         DATAA(0x11),
         RESET(0x7D),
         REG_DIR_A(0x0F),
-        REG_DIR_B(0x0E)
+        REG_DIR_B(0x0E),
+        INTERRUPT_MASK_A(0x13)
         ;
         public int bVal;
         Registry(int bVal) {

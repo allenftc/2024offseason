@@ -12,7 +12,7 @@ public class LineFollowerSubsystem extends SubsystemBase {
     public LineFollowerSubsystem(HardwareMap hMap, String key) {
         lineFollower = hMap.get(LineFollower.class,key);
     }
-    public int getPosition() {
+    public double getPosition() {
         return lineFollower.getPosition();
     }
     public double getPositionInches() {

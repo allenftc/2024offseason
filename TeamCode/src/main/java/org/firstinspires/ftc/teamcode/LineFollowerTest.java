@@ -12,7 +12,9 @@ public class LineFollowerTest extends LinearOpMode {
         LineFollower lineFollower = hardwareMap.get(LineFollower.class,"linefollower");
         waitForStart();
         while(opModeIsActive()) {
-            telemetry.addData("position",lineFollower.getPositionInches());
+            telemetry.addData("raw",Integer.toBinaryString(lineFollower.scan()));
+            telemetry.addData("position",lineFollower.getPosition());
+            telemetry.addData("inches",lineFollower.getPositionInches());
             telemetry.update();
         }
     }
