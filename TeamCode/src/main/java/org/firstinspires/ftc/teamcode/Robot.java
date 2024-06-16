@@ -67,7 +67,8 @@ public abstract class Robot extends LinearOpMode {
         otos = hardwareMap.get(SparkFunOTOS.class,"otos");
         otos.setLinearUnit(SparkFunOTOS.LinearUnit.INCHES);
         otos.setAngularUnit(SparkFunOTOS.AngularUnit.DEGREES);
-        otos.setOffset(new SparkFunOTOS.Pose2D(-6,-0.5,180));
+        otos.setOffset(new SparkFunOTOS.Pose2D(4,1.5,90));
+        otos.setAngularScalar(360/364.0);
         otos.calibrateImu();
         resetSystems();
 
