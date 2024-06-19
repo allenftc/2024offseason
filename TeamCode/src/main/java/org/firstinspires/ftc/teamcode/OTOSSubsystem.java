@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
@@ -10,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class OTOSSubsystem extends SubsystemBase {
     SparkFunOTOS otos;
     SparkFunOTOS.Pose2D pose = new SparkFunOTOS.Pose2D();
-    Telemetry t;
+    Telemetry t = FtcDashboard.getInstance().getTelemetry();
     @Override
     public void periodic() {
         pose = otos.getPosition();

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -7,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class MecanumDriveSubsystem extends SubsystemBase {
     DcMotor fr, fl, br, bl;
-    Telemetry t;
+    Telemetry t = FtcDashboard.getInstance().getTelemetry();
     public MecanumDriveSubsystem(DcMotor fr, DcMotor fl, DcMotor br, DcMotor bl) {
         this.fr = fr;
         this.fl = fl;
@@ -28,10 +29,13 @@ public class MecanumDriveSubsystem extends SubsystemBase {
      * @param heading in degrees
      * */
     public void drive(double x, double y, double rx, double heading) {
+        t.addData("inputx", x);
+        t.addData("inputy",y);
+        t.addData("inputr", rx);
         double headingDegs = -Math.toRadians(heading);
-        double rotX = -y * Math.cos(headingDegs) - x * Math.sin(headingDegs);
+        double rotX = y * Math.cos(headingDegs) + x * Math.sin(headingDegs);
         t.addData("rotX", rotX);
-        double rotY = -y * Math.sin(headingDegs) + x * Math.cos(headingDegs);
+        double rotY = y * Math.sin(headingDegs) - x * Math.cos(headingDegs);
         t.addData("rotY", rotY);
         //rotY = -rotY;
 

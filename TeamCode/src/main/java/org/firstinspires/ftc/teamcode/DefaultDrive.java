@@ -4,11 +4,11 @@ import com.arcrobotics.ftclib.command.CommandBase;
 
 import java.util.function.DoubleSupplier;
 
-public class DriveCommand extends CommandBase {
+public class DefaultDrive extends CommandBase {
     MecanumDriveSubsystem drive;
     OTOSSubsystem otos;
     DoubleSupplier x, y, rx, heading;
-    public DriveCommand(MecanumDriveSubsystem driveSubsystem, OTOSSubsystem otos, DoubleSupplier inputX, DoubleSupplier inputY, DoubleSupplier inputRx) {
+    public DefaultDrive(MecanumDriveSubsystem driveSubsystem, OTOSSubsystem otos, DoubleSupplier inputX, DoubleSupplier inputY, DoubleSupplier inputRx) {
         this.drive = driveSubsystem;
         this.otos = otos;
         this.x = inputX;
@@ -18,6 +18,6 @@ public class DriveCommand extends CommandBase {
     }
     @Override
     public void execute() {
-        drive.drive(-y.getAsDouble(),x.getAsDouble(),rx.getAsDouble(),otos.getPose().h);
+        drive.drive(y.getAsDouble(),-x.getAsDouble(),rx.getAsDouble(),otos.getPose().h);
     }
 }
