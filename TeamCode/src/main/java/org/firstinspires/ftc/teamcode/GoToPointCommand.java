@@ -12,10 +12,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @Config
 
 public class GoToPointCommand extends CommandBase {
-    PIDController translationalPID = new PIDController(0,0,0);
-    PIDController headingPID = new PIDController(0,0,0);
-    public static double translationkP = 0.01;
+    PIDController translationalPID = new PIDController(0.03,0,0);
+    PIDController headingPID = new PIDController(0.001,0,0);
+    public static double translationkP = 0.03;
+    public static double translationkI = 0.01;
     public static double headingkP = 0.001;
+    public static double headingkI = 0.0003;
     MecanumDriveSubsystem drive;
     OTOSSubsystem otos;
     Pose2d target;
@@ -48,7 +50,7 @@ public class GoToPointCommand extends CommandBase {
         translationalPID.setP(translationkP);
         headingPID.setP(headingkP);
         Pose2d currentPose = otos.getFTCLibPose();
-        drive.drive(translationalPID.calculate(currentPose.getX(),target.getX()),translationalPID.calculate(currentPose.getY(), target.getY()), /*AngleUnit.normalizeDegrees(target.getRotation().getDegrees()-currentPose.getRotation().getDegrees()),currentPose.getRotation().getDegrees()*/0,currentPose.getRotation().getDegrees());
+        drive.drive(translationalPID.calculate(currentPose.getX(),target.getX()),translationalPID.calculate(currentPose.getY(), target.getY()), headingPID.calculate(0,AngleUnit.normalizeDegrees(target.getRotation().getDegrees()-currentPose.getRotation().getDegrees())),currentPose.getRotation().getDegrees());
     }
     @Override
     public void end(boolean wasInterrupted) {
@@ -56,6 +58,6 @@ public class GoToPointCommand extends CommandBase {
     }
     @Override
     public boolean isFinished() {
-        return target.getTranslation().getDistance(otos.getFTCLibPose().getTranslation())<tol;
+        return target.getTranslation().getDistance(otos.getFTCLibPose().getTranslation())<tol&&Utils.compare(target.getHeading(),otos.getFTCLibPose().getHeading(),0.01);
     }
 }
