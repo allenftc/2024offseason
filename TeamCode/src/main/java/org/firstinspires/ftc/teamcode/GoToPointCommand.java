@@ -12,12 +12,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @Config
 
 public class GoToPointCommand extends CommandBase {
-    public static PIDController translationalPID = new PIDController(0.03,0,0);
-    public static PIDController headingPID = new PIDController(0.001,0,0);
-    public static double translationkP = 0.02;
+    public static PIDController translationalPID = new PIDController(0.1,0,0);
+    public static PIDController headingPID = new PIDController(0.01,0,0);
+    public static double translationkP = 0.06;
     public static double translationkI = 0.01;
     public static double translationkD = 0.00000;
-    public static double headingkP = 0.002;
+    public static double headingkP = 0.01;
     public static double headingkI = 0.0003;
     public static double headingkD = 0;
     MecanumDriveSubsystem drive;
@@ -64,7 +64,7 @@ public class GoToPointCommand extends CommandBase {
         double xDist = target.getX() - currentPose.getX();
         double yDist = target.getY() - currentPose.getY();
         double angle = Math.atan2(yDist,xDist);
-        double magnitude = Math.sqrt(Math.hypot(xDist,yDist));
+        double magnitude = Math.pow(Math.hypot(xDist,yDist),0.75);
         magnitude = translationalPID.calculate(0,magnitude);
         double xMove = Math.cos(angle)*magnitude;
         double yMove = Math.sin(angle)*magnitude;

@@ -46,5 +46,8 @@ public class OTOSSubsystem extends SubsystemBase {
     public void reset() {
         otos.resetTracking();
     }
+    public void setPosition(double x, double y) {
+        otos.setPosition(new SparkFunOTOS.Pose2D(x,y,pose.h));
+    }
 
 }
