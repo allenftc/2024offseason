@@ -18,6 +18,6 @@ public class LineRelocalizeCommand extends CommandBase {
     }
     @Override
     public boolean isFinished() {
-        return Utils.compare(lf.getPositionInches(),0,0);
+        return Utils.compare(lf.getPositionInches(),0,0.25);
     }
 }
