@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 public class LineFollower extends I2cDeviceSynchDevice<I2cDeviceSynch> {
     byte lastBarRawValue = 0;
     boolean invertBits = true;
+    byte bitsCounted = 0;
 
     public LineFollower(I2cDeviceSynch i2cDeviceSynch, boolean deviceClientIsOwned) {
         super(i2cDeviceSynch, deviceClientIsOwned);
@@ -46,7 +47,7 @@ public class LineFollower extends I2cDeviceSynchDevice<I2cDeviceSynch> {
     public double getPosition() {
 
         int accumulator = 0;
-        byte bitsCounted = 0;
+        bitsCounted = 0;
         double lastBarPositionValue = 0;
         int i = 0;
         for ( i = 0; i < 8; i++ )
@@ -85,6 +86,9 @@ public class LineFollower extends I2cDeviceSynchDevice<I2cDeviceSynch> {
     }
     public void setInvertBits(boolean invert) {
         invertBits=invert;
+    }
+    public byte getDensity() {
+        return bitsCounted;
     }
 
     /**

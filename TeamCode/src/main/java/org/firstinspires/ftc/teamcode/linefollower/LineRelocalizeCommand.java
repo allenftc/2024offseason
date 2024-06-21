@@ -11,13 +11,16 @@ public class LineRelocalizeCommand extends CommandBase {
     public LineRelocalizeCommand(LineFollowerSubsystem lineFollowerSubsystem, OTOSSubsystem otosSubsystem) {
         lf = lineFollowerSubsystem;
         otos = otosSubsystem;
+        //addRequirements(lf, otos);
     }
     @Override
     public void execute() {
-        otos.setPosition(50.5-lf.getPositionInches(),otos.getPose().y);
+        if (lf.isOnline())
+            otos.setPosition(50.0-lf.getPositionInches(),otos.getPose().y);
     }
     @Override
     public boolean isFinished() {
-        return Utils.compare(lf.getPositionInches(),0,0.25);
+        return Utils.compare(lf.getPositionInches(),0,0.5);
+        //return false;
     }
 }

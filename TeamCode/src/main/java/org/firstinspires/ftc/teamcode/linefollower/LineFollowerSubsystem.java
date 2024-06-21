@@ -18,5 +18,8 @@ public class LineFollowerSubsystem extends SubsystemBase {
     public double getPositionInches() {
         return lineFollower.getPositionInches();
     }
+    public boolean isOnline() {
+        return lineFollower.getDensity()>0;
+    }
 
 }
