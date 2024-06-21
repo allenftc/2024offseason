@@ -35,10 +35,8 @@ public class GoToPointTest extends CommandOpMode {
                 new GoToPointCommand(mecanum, otos, new Pose2d(24,-24,new Rotation2d(Math.PI/2)),0.5),
                 new GoToPointCommand(mecanum, otos, new Pose2d(50,-8,new Rotation2d(Math.PI/4)),2),
                 new GoToPointCommand(mecanum, otos, new Pose2d(50,62,new Rotation2d(Math.PI/2)),0.5),
-                new WaitCommand(500),
-                new GoToPointCommand(mecanum, otos, new Pose2d(50,74,new Rotation2d(Math.PI/2)),0.5),
-                new ParallelDeadlineGroup(new LineRelocalizeCommand(lineFollower,otos),new GoToPointCommand(mecanum, otos, new Pose2d(50,74,new Rotation2d(Math.PI/2)),0.0)),
-                new WaitCommand(500),
+                new GoToPointCommand(mecanum, otos, new Pose2d(50,72,new Rotation2d(Math.PI/2)),0.5),
+                new ParallelDeadlineGroup(new LineRelocalizeCommand(lineFollower,otos),new GoToPointCommand(mecanum, otos, new Pose2d(50,72,new Rotation2d(Math.PI/2)),0.0)),
                 new GoToPointCommand(mecanum, otos, new Pose2d(50,-8,new Rotation2d(Math.PI/2)),2),
                 new GoToPointCommand(mecanum, otos, new Pose2d(24,-24,new Rotation2d(Math.PI/2)),0.5),
                 new GoToPointCommand(mecanum, otos, new Pose2d(0,0,new Rotation2d(0)))
